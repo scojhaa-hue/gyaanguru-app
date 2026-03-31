@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GyaanGuru v3</title>
+  <title>GyaanGuru v6</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body { font-family: Arial; margin:0; background:#eef2f7; }
-    header { background:#1e88e5; color:white; padding:15px; text-align:center; }
+    header { background:#d32f2f; color:white; padding:15px; text-align:center; }
 
     .container { padding:10px; }
 
@@ -21,102 +21,94 @@
       width:100%;
       padding:10px;
       margin-top:8px;
-      background:#1e88e5;
+      background:#d32f2f;
       color:white;
       border:none;
       border-radius:6px;
     }
 
-    select, textarea {
+    textarea, select {
       width:100%;
       padding:10px;
       margin-top:8px;
+    }
+
+    .result {
+      margin-top:10px;
+      background:#f1f1f1;
+      padding:10px;
+      border-radius:8px;
     }
   </style>
 </head>
 
 <body>
 
-<header>📚 GyaanGuru - Smart Learning App</header>
+<header>📚 GyaanGuru - Smart Marking System</header>
 
 <div class="container">
 
   <div class="card">
-    <h3>🎓 Select Class</h3>
-    <select id="class">
-      <option>Class 6</option>
-      <option>Class 7</option>
-      <option>Class 8</option>
-      <option>Class 9</option>
-      <option>Class 10</option>
-      <option>Class 11</option>
-      <option>Class 12</option>
+
+    <h3>📝 Question</h3>
+    <textarea id="question" placeholder="Enter question..."></textarea>
+
+    <h3>🎯 Marks</h3>
+    <select id="marks">
+      <option value="1">1 Mark</option>
+      <option value="2">2 Marks</option>
+      <option value="3">3 Marks</option>
+      <option value="5">5 Marks</option>
+      <option value="10">10 Marks</option>
     </select>
 
-    <h3>🌐 Medium</h3>
-    <select id="medium">
-      <option>Hindi</option>
-      <option>English</option>
-      <option>Hinglish</option>
-    </select>
+    <h3>✍️ Answer</h3>
+    <textarea id="answer" placeholder="Write answer..."></textarea>
 
-    <button onclick="loadContent()">Load Content</button>
-  </div>
+    <button onclick="evaluate()">Check Answer</button>
 
-  <div class="card">
-    <h3>📖 Chapter: Photosynthesis</h3>
-    <p id="notes">Click Load Content</p>
-    <button onclick="watchVideo()">🎬 Watch Animation</button>
-  </div>
+    <div id="result" class="result"></div>
 
-  <div class="card">
-    <h3>🧑‍🏫 Whiteboard (Ojha Sir)</h3>
-    <textarea id="question" placeholder="Write your question..."></textarea>
-    <button onclick="teach()">Ask Ojha Sir</button>
-    <p id="answer"></p>
-  </div>
-
-  <div class="card">
-    <h3>🎮 Play to Learn</h3>
-    <button onclick="playGame()">Start Quiz Game</button>
-    <p id="game"></p>
   </div>
 
 </div>
 
 <script>
 
-function loadContent(){
-  let medium = document.getElementById("medium").value;
+function evaluate(){
 
-  if(medium == "Hindi"){
-    document.getElementById("notes").innerHTML =
-    "प्रकाश संश्लेषण वह प्रक्रिया है जिसमें पौधे सूर्य के प्रकाश से भोजन बनाते हैं।";
+  let ans = document.getElementById("answer").value.toLowerCase();
+  let maxMarks = parseInt(document.getElementById("marks").value);
+
+  let score = 0;
+  let feedback = "";
+  let mnemonic = "";
+
+  // Evaluation logic
+  if(ans.length < 20){
+    score = Math.floor(maxMarks * 0.3);
+    feedback = "Answer short hai. Detail likho.";
   }
-  else if(medium == "English"){
-    document.getElementById("notes").innerHTML =
-    "Photosynthesis is the process by which plants make food using sunlight.";
+  else if(ans.includes("definition")){
+    score = Math.floor(maxMarks * 0.6);
+    feedback = "Definition sahi hai. Example add karo.";
+  }
+  else if(ans.includes("process") || ans.includes("formula")){
+    score = Math.floor(maxMarks * 0.8);
+    feedback = "Achha answer hai. Diagram/keywords add karo.";
   }
   else{
-    document.getElementById("notes").innerHTML =
-    "Photosynthesis ek process hai jisme plants sunlight se food banate hain.";
+    score = Math.floor(maxMarks * 0.5);
+    feedback = "Answer average hai. Structure improve karo.";
   }
-}
 
-function watchVideo(){
-  window.location.href = "https://www.youtube.com/watch?v=UPBMG5EYydo";
-}
+  mnemonic = "👉 Trick: 'DEF' = Definition + Example + Formula";
 
-function teach(){
-  let q = document.getElementById("question").value;
+  document.getElementById("result").innerHTML =
+  "Score: " + score + "/" + maxMarks + "<br><br>" +
+  "📊 Feedback: " + feedback + "<br><br>" +
+  "🧠 Mnemonic: " + mnemonic;
 
-  document.getElementById("answer").innerHTML =
-  "Ojha Sir: " + q + " ka answer hai - Photosynthesis ek important topic hai.";
-}
-
-function playGame(){
-  document.getElementById("game").innerHTML =
-  "Quiz: Plants food kaise banate hain? Answer: Photosynthesis 🎉";
 }
 
 </script>
