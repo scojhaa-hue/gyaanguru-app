@@ -1,218 +1,203 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>GyaanGuru Infinity</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.png">
+<title>GyaanGuru App</title>
 
 <style>
-:root{
---bg:#eef2f5;
---card:#fff;
---text:#000;
---primary:#0d47a1;
-}
-.dark{
---bg:#121212;
---card:#1e1e1e;
---text:#fff;
---primary:#1976d2;
-}
-body{margin:0;font-family:Arial;background:var(--bg);color:var(--text);}
-header{background:var(--primary);color:#fff;padding:10px;display:flex;justify-content:space-between;}
-.card{background:var(--card);margin:10px;padding:10px;border-radius:10px;}
-button{width:100%;padding:10px;margin-top:5px;background:var(--primary);color:white;border:none;}
-select,textarea,input{width:100%;padding:8px;margin-top:5px;}
+body{font-family:sans-serif;margin:0;background:#eef2f5}
+header{background:#0d47a1;color:white;padding:12px;text-align:center}
+.card{background:white;margin:10px;padding:10px;border-radius:10px}
+button,select,textarea{width:100%;padding:10px;margin-top:5px}
+.dark{background:#121212;color:white}
 </style>
+
 </head>
 
 <body>
 
 <header>
-<span>🎓 GyaanGuru Infinity</span>
-<span onclick="toggleMode()">🌙</span>
+🎓 GyaanGuru-App  
+<br>By S. C. Ojha  
+<br><i>"Think Beyond Books"</i>
 </header>
 
 <div class="card">
-<input id="name" placeholder="Enter Name">
-<button onclick="login()">Login</button>
-<p id="welcome"></p>
-</div>
-
-<div class="card">
 <select id="class" onchange="loadSubjects()">
-<option>6</option><option>7</option><option>8</option>
-<option>9</option><option>10</option>
-<option>11</option><option>12</option>
+<option>Class 6</option><option>Class 7</option><option>Class 8</option>
+<option>Class 9</option><option>Class 10</option>
+<option>Class 11</option><option>Class 12</option>
 </select>
 
-<select id="subject" onchange="loadChapters()"></select>
-<select id="chapter"></select>
+<select id="subject"></select>
 
-<select id="medium">
-<option>Hindi</option>
-<option>English</option>
+<select id="chapter">
+<option>Photosynthesis</option>
+<option>Motion</option>
+<option>Force</option>
+<option>Algebra</option>
 </select>
 
 <button onclick="loadContent()">Load Content</button>
 </div>
 
+<div class="card" id="notes">Notes will appear here</div>
+
 <div class="card">
-<h3>📚 Notes</h3>
-<p id="notes"></p>
-<p id="mnemonic"></p>
-<button onclick="download()">📥 Download</button>
-<button onclick="video()">🎬 Watch Video</button>
+<button onclick="watchVideo()">🎬 Watch Video</button>
 </div>
 
 <div class="card">
-<h3>🤖 AI Teacher</h3>
 <select id="voiceLang">
 <option>Hindi</option>
 <option>English</option>
 <option>Hinglish</option>
 </select>
 
-<textarea id="q"></textarea>
-<button onclick="ai()">Ask AI</button>
+<textarea id="q" placeholder="Ask question"></textarea>
+<button onclick="askAI()">Ask AI</button>
 <p id="ans"></p>
 <button onclick="speak()">🔊 Speak</button>
 </div>
 
 <div class="card">
-<h3>🎯 Quiz</h3>
 <button onclick="quiz()">Start Quiz</button>
 <p id="quizQ"></p>
-<div id="quizOpt"></div>
-<p id="result"></p>
-<p id="progress"></p>
+<div id="opts"></div>
+<p id="score"></p>
+</div>
+
+<div class="card">
+<button onclick="toggleDark()">🌙 Dark Mode</button>
 </div>
 
 <script>
 
-// DARK MODE
-function toggleMode(){
-document.body.classList.toggle("dark");
-}
-
-// LOGIN
-function login(){
-welcome.innerText="Welcome "+(name.value||"Student");
-}
-
-// SUBJECTS FULL
+// SUBJECT SYSTEM
 function loadSubjects(){
 let c=class.value;
-let arr=[];
+let s=subject;
+s.innerHTML="";
 
-if(c<=8){
-arr=["Hindi","English","Science","Math","Social Science"];
-}
-else if(c<=10){
-arr=["Hindi","English","Science","Math","Social Science","IT","Tourism"];
-}
-else{
-arr=["Hindi","English","Physics","Chemistry","Biology","Math","History","Polity","Geography","Economics","Commerce","Accountancy","Business","IT","Tourism"];
-}
+let data={
+"Class 6":["Hindi","English","Science","Math","SST"],
+"Class 9":["Hindi","English","Science","Math","SST","IT"]
+};
 
-subject.innerHTML="";
-arr.forEach(s=>{
+let list=data[c]||["Science","Math"];
+list.forEach(x=>{
 let o=document.createElement("option");
-o.text=s;
-subject.add(o);
-});
-
-loadChapters();
-}
-
-// CHAPTERS
-function loadChapters(){
-chapter.innerHTML="";
-["Basics","Motion","Force","Energy","Algebra"].forEach(c=>{
-let o=document.createElement("option");
-o.text=c;
-chapter.add(o);
+o.text=x;
+s.add(o);
 });
 }
+loadSubjects();
 
 // CONTENT
 function loadContent(){
-notes.innerText="Concept: "+chapter.value+" explained in simple way.";
-mnemonic.innerText="Mnemonic: Easy trick to remember "+chapter.value;
-}
-
-// DOWNLOAD
-function download(){
-let blob=new Blob([notes.innerText]);
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="notes.txt";
-a.click();
+notes.innerHTML="🌿 Plants make food using sunlight.<br>Mnemonic: SUN";
 }
 
 // VIDEO
-function video(){
+function watchVideo(){
 window.open("https://youtube.com/results?search_query="+chapter.value);
 }
 
 // AI
-function ai(){
-let t=q.value.toLowerCase();
-if(t.includes("force")){
-ans.innerText="Force is push or pull.";
-}
-else{
-ans.innerText="Simple explanation for "+chapter.value;
-}
+function askAI(){
+ans.innerText="Simple explanation: "+q.value;
 }
 
 // VOICE
 function speak(){
-let speech=new SpeechSynthesisUtterance(ans.innerText);
+let t=ans.innerText;
 let lang=voiceLang.value;
+let s=new SpeechSynthesisUtterance(t);
 
-if(lang=="Hindi") speech.lang="hi-IN";
-else if(lang=="Hinglish") speech.lang="en-IN";
-else speech.lang="en-US";
+if(lang=="Hindi") s.lang="hi-IN";
+else if(lang=="Hinglish") s.lang="en-IN";
+else s.lang="en-US";
 
-speechSynthesis.speak(speech);
+speechSynthesis.speak(s);
 }
 
-// QUIZ + ANALYTICS
-let total=0,correct=0;
-
+// QUIZ
 function quiz(){
 quizQ.innerText="Force is?";
-quizOpt.innerHTML="";
+opts.innerHTML="";
 
 ["Push","Pull","Both"].forEach(opt=>{
 let b=document.createElement("button");
 b.innerText=opt;
-
-b.onclick=function(){
-total++;
-if(opt=="Both"){correct++;result.innerText="Correct";}
-else result.innerText="Wrong";
-
-let percent=Math.floor((correct/total)*100);
-progress.innerText="Accuracy: "+percent+"%";
-};
-
-quizOpt.appendChild(b);
+b.onclick=()=>score.innerText=(opt=="Both"?"Correct":"Wrong");
+opts.appendChild(b);
 });
 }
 
-// INIT
-loadSubjects();
-
-</script>
-
-<script>
-if("serviceWorker" in navigator){
-navigator.serviceWorker.register("sw.js");
+// DARK MODE
+function toggleDark(){
+document.body.classList.toggle("dark");
 }
+
+// 🔥 AUTO ICON + PWA (NO FILE NEEDED)
+(function(){
+
+// Create icon dynamically
+let canvas=document.createElement("canvas");
+canvas.width=192;canvas.height=192;
+let ctx=canvas.getContext("2d");
+
+ctx.fillStyle="#0d47a1";
+ctx.fillRect(0,0,192,192);
+
+ctx.fillStyle="white";
+ctx.font="bold 20px Arial";
+ctx.fillText("GyaanGuru",10,80);
+ctx.font="14px Arial";
+ctx.fillText("Ojha Sir",30,110);
+
+let iconURL=canvas.toDataURL();
+
+// Inject favicon
+let link=document.createElement("link");
+link.rel="icon";
+link.href=iconURL;
+document.head.appendChild(link);
+
+// Manifest via blob
+let manifest={
+name:"GyaanGuru App",
+short_name:"GyaanGuru",
+start_url:".",
+display:"standalone",
+background_color:"#0d47a1",
+theme_color:"#0d47a1",
+icons:[{
+src:iconURL,
+sizes:"192x192",
+type:"image/png"
+}]
+};
+
+let blob=new Blob([JSON.stringify(manifest)],{type:"application/json"});
+let manifestURL=URL.createObjectURL(blob);
+
+let mlink=document.createElement("link");
+mlink.rel="manifest";
+mlink.href=manifestURL;
+document.head.appendChild(mlink);
+
+})();
+
+// SERVICE WORKER
+if("serviceWorker" in navigator){
+navigator.serviceWorker.register(URL.createObjectURL(new Blob([`
+self.addEventListener('fetch',e=>{
+e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)))
+});
+`],{type:"text/javascript"})));
+}
+
 </script>
 
 </body>
