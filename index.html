@@ -2,197 +2,167 @@
 <html>
 <head>
 <title>GyaanGuru App</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body { font-family: Arial; margin:0; background:#eef2f7; }
+body {font-family:Arial; background:#f2f5f7; margin:0;}
 
-header {
-  background:#1b5e20;
-  color:white;
-  padding:10px;
-  text-align:center;
+header{
+background:#0d47a1;
+color:white;
+padding:12px;
+text-align:center;
+font-size:18px;
 }
 
-header img {
-  width:40px;
-  vertical-align:middle;
+.card{
+background:white;
+margin:10px;
+padding:12px;
+border-radius:10px;
 }
 
-.container { padding:10px; }
-
-.card {
-  background:white;
-  padding:15px;
-  margin-bottom:10px;
-  border-radius:10px;
+select, textarea{
+width:100%;
+padding:8px;
+margin-top:5px;
 }
 
-button {
-  width:100%;
-  padding:10px;
-  margin-top:8px;
-  background:#1b5e20;
-  color:white;
-  border:none;
-  border-radius:6px;
-}
-
-select, textarea {
-  width:100%;
-  padding:10px;
-  margin-top:8px;
-}
-
-.result {
-  margin-top:10px;
-  background:#f1f1f1;
-  padding:10px;
-  border-radius:8px;
+button{
+width:100%;
+padding:10px;
+margin-top:8px;
+background:#0d47a1;
+color:white;
+border:none;
+border-radius:6px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-<img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png">
-<b> GyaanGuru App - By Ojha Sir</b>
-</header>
+<header>🎓 GyaanGuru - By Ojha Sir</header>
 
-<div class="container">
-
-<!-- CLASS -->
 <div class="card">
-<h3>🎓 Class</h3>
+<h3>Class</h3>
 <select id="class">
-<option>Class 6</option>
-<option>Class 7</option>
-<option>Class 8</option>
-<option>Class 9</option>
-<option>Class 10</option>
-<option>Class 11</option>
-<option>Class 12</option>
+<option>6</option><option>7</option><option>8</option>
+<option>9</option><option>10</option>
+<option>11</option><option>12</option>
 </select>
 
-<h3>📘 Subject</h3>
-<select id="subject" onchange="loadChapters()">
+<h3>Subject</h3>
+<select id="subject">
 <option>Science</option>
 <option>Math</option>
+<option>English</option>
+<option>Hindi</option>
 </select>
 
-<h3>📖 Chapter</h3>
-<select id="chapter"></select>
+<h3>Chapter</h3>
+<select id="chapter">
+<option>Photosynthesis</option>
+<option>Motion</option>
+<option>Force</option>
+<option>Algebra</option>
+</select>
 
 <button onclick="loadContent()">Load Content</button>
 </div>
 
-<!-- NOTES -->
 <div class="card">
-<h3>📖 Notes</h3>
+<h3>Notes</h3>
 <p id="notes">Click Load Content</p>
-<button onclick="watchVideo()">🎬 Watch Video</button>
+<p id="mnemonic"></p>
+
+<button onclick="video()">Watch Video</button>
 </div>
 
-<!-- WHITEBOARD -->
 <div class="card">
-<h3>🧑‍🏫 Ojha Sir Whiteboard</h3>
-<textarea id="wbq" placeholder="Ask question..."></textarea>
-<button onclick="teach()">Ask Ojha Sir</button>
-<p id="wbans"></p>
+<h3>Ojha Sir Whiteboard</h3>
+<textarea id="q"></textarea>
+<button onclick="teach()">Ask</button>
+<p id="ans"></p>
 </div>
 
-<!-- ANSWER CHECK -->
 <div class="card">
-<h3>📝 Answer Evaluation</h3>
-
-<textarea id="question" placeholder="Enter question..."></textarea>
+<h3>Answer Evaluation</h3>
 
 <select id="marks">
-<option value="1">1 Mark</option>
-<option value="2">2 Marks</option>
-<option value="3">3 Marks</option>
-<option value="5">5 Marks</option>
-<option value="10">10 Marks</option>
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>5</option>
+<option>10</option>
 </select>
 
-<textarea id="answer" placeholder="Write answer..."></textarea>
+<textarea id="answer"></textarea>
+<button onclick="check()">Check</button>
 
-<button onclick="evaluate()">Check Answer</button>
-
-<div id="result" class="result"></div>
+<p id="result"></p>
 </div>
 
+<div class="card">
+<h3>🎮 Play to Learn</h3>
+<button onclick="quiz()">Start Quiz</button>
+<p id="quiz"></p>
 </div>
 
 <script>
 
-let videos = {
-  "Photosynthesis": "https://www.youtube.com/watch?v=UPBMG5EYydo",
-  "Motion": "https://www.youtube.com/watch?v=nA9xNaHYZk4",
-  "Force": "https://www.youtube.com/watch?v=3HjZ0r9dW2I"
-};
-
-function loadChapters(){
-  let subject = document.getElementById("subject").value;
-  let chapter = document.getElementById("chapter");
-
-  chapter.innerHTML = "";
-
-  if(subject == "Science"){
-    chapter.innerHTML += "<option>Photosynthesis</option>";
-    chapter.innerHTML += "<option>Motion</option>";
-    chapter.innerHTML += "<option>Force</option>";
-  } else {
-    chapter.innerHTML += "<option>Algebra</option>";
-    chapter.innerHTML += "<option>Geometry</option>";
-  }
-}
-
 function loadContent(){
-  let ch = document.getElementById("chapter").value;
+let ch = document.getElementById("chapter").value;
 
-  if(ch == "Photosynthesis"){
-    document.getElementById("notes").innerHTML =
-    "Plants sunlight se food banate hain (Photosynthesis).";
-  }
-  else if(ch == "Motion"){
-    document.getElementById("notes").innerHTML =
-    "Motion ka matlab position change hona hai.";
-  }
-  else{
-    document.getElementById("notes").innerHTML =
-    "Basic concept samjho aur practice karo.";
-  }
+if(ch=="Photosynthesis"){
+notes.innerText="Plants make food using sunlight";
+mnemonic.innerText="SUN = Sunlight + CO2 + Water";
+}
+else if(ch=="Motion"){
+notes.innerText="Motion = change in position";
+mnemonic.innerText="DST = Distance Speed Time";
+}
+else if(ch=="Force"){
+notes.innerText="Force = push or pull";
+mnemonic.innerText="F = ma";
+}
+else{
+notes.innerText="Basic concept";
+mnemonic.innerText="Learn smart";
+}
 }
 
-function watchVideo(){
-  let ch = document.getElementById("chapter").value;
-  window.open(videos[ch]);
+function video(){
+let ch=document.getElementById("chapter").value;
+
+if(ch=="Photosynthesis")
+window.open("https://youtu.be/UPBMG5EYydo");
+
+if(ch=="Motion")
+window.open("https://youtu.be/nA9xNaHYZk4");
+
+if(ch=="Force")
+window.open("https://youtu.be/3HjZ0r9dW2I");
 }
 
 function teach(){
-  let q = document.getElementById("wbq").value;
-
-  document.getElementById("wbans").innerHTML =
-  "Ojha Sir: " + q + " ka answer simple language me samjho...";
+let q=document.getElementById("q").value;
+document.getElementById("ans").innerText=
+"Ojha Sir: "+q+" ko simple tarike se samjho";
 }
 
-function evaluate(){
-  let ans = document.getElementById("answer").value;
-  let maxMarks = parseInt(document.getElementById("marks").value);
+function check(){
+let m=document.getElementById("marks").value;
+let score=Math.floor(m*0.8);
 
-  let score = Math.floor(maxMarks * 0.7);
-
-  let mnemonic = "👉 Trick: DEF = Definition + Example + Formula";
-
-  document.getElementById("result").innerHTML =
-  "Score: " + score + "/" + maxMarks + "<br><br>" +
-  "Feedback: Improve structure.<br><br>" +
-  "Mnemonic: " + mnemonic;
+document.getElementById("result").innerText=
+"Score: "+score+"/"+m+" Improve answer writing";
 }
 
-loadChapters();
+function quiz(){
+document.getElementById("quiz").innerText=
+"Q: What is force?";
+}
 
 </script>
 
