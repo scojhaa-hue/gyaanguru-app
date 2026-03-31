@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GyaanGuru AI App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body { font-family: Arial; background: #eef2f7; margin: 0; }
+    header { background: #4CAF50; color: white; text-align: center; padding: 15px; }
+    .container { padding: 10px; }
+    .card { background: white; padding: 15px; margin: 10px 0; border-radius: 10px; }
+    textarea { width: 100%; height: 100px; }
+    button { padding: 10px; background: #4CAF50; color: white; border: none; margin-top: 10px; }
+    .result { margin-top: 10px; background: #f1f1f1; padding: 10px; border-radius: 8px; }
+  </style>
+</head>
+
+<body>
+
+<header>📚 GyaanGuru AI Teacher</header>
+
+<div class="container">
+
+  <div class="card">
+    <h3>🧑‍🏫 Ojha Sir Teaching</h3>
+    <button onclick="alert('Ojha Sir explaining slowly...')">Start Class</button>
+  </div>
+
+  <div class="card">
+    <h3>🎬 Animation</h3>
+    <button onclick="window.open('https://www.youtube.com/watch?v=CM9aVYfZ7tQ')">Watch Video</button>
+  </div>
+
+  <div class="card">
+    <h3>📝 Answer Checker</h3>
+    <textarea id="answer" placeholder="Write your answer..."></textarea>
+    <button onclick="checkAnswer()">Check</button>
+    <div id="result" class="result"></div>
+  </div>
+
+</div>
+
+<script>
+function checkAnswer() {
+  let ans = document.getElementById("answer").value;
+
+  if(ans.length < 20){
+    document.getElementById("result").innerHTML =
+    "Score: 3/10 ❌ Answer too short";
+  }
+  else if(ans.includes("process")){
+    document.getElementById("result").innerHTML =
+    "Score: 8/10 ✅ Good answer, add diagram";
+  }
+  else{
+    document.getElementById("result").innerHTML =
+    "Score: 5/10 Improve keywords";
+  }
+}
+</script>
+
+</body>
+</html>
