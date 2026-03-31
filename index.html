@@ -1,169 +1,218 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>GyaanGuru App</title>
+<title>GyaanGuru Infinity</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.png">
 
 <style>
-body {font-family:Arial; background:#f2f5f7; margin:0;}
-
-header{
-background:#0d47a1;
-color:white;
-padding:12px;
-text-align:center;
-font-size:18px;
+:root{
+--bg:#eef2f5;
+--card:#fff;
+--text:#000;
+--primary:#0d47a1;
 }
-
-.card{
-background:white;
-margin:10px;
-padding:12px;
-border-radius:10px;
+.dark{
+--bg:#121212;
+--card:#1e1e1e;
+--text:#fff;
+--primary:#1976d2;
 }
-
-select, textarea{
-width:100%;
-padding:8px;
-margin-top:5px;
-}
-
-button{
-width:100%;
-padding:10px;
-margin-top:8px;
-background:#0d47a1;
-color:white;
-border:none;
-border-radius:6px;
-}
+body{margin:0;font-family:Arial;background:var(--bg);color:var(--text);}
+header{background:var(--primary);color:#fff;padding:10px;display:flex;justify-content:space-between;}
+.card{background:var(--card);margin:10px;padding:10px;border-radius:10px;}
+button{width:100%;padding:10px;margin-top:5px;background:var(--primary);color:white;border:none;}
+select,textarea,input{width:100%;padding:8px;margin-top:5px;}
 </style>
 </head>
 
 <body>
 
-<header>🎓 GyaanGuru - By Ojha Sir</header>
+<header>
+<span>🎓 GyaanGuru Infinity</span>
+<span onclick="toggleMode()">🌙</span>
+</header>
 
 <div class="card">
-<h3>Class</h3>
-<select id="class">
+<input id="name" placeholder="Enter Name">
+<button onclick="login()">Login</button>
+<p id="welcome"></p>
+</div>
+
+<div class="card">
+<select id="class" onchange="loadSubjects()">
 <option>6</option><option>7</option><option>8</option>
 <option>9</option><option>10</option>
 <option>11</option><option>12</option>
 </select>
 
-<h3>Subject</h3>
-<select id="subject">
-<option>Science</option>
-<option>Math</option>
-<option>English</option>
-<option>Hindi</option>
-</select>
+<select id="subject" onchange="loadChapters()"></select>
+<select id="chapter"></select>
 
-<h3>Chapter</h3>
-<select id="chapter">
-<option>Photosynthesis</option>
-<option>Motion</option>
-<option>Force</option>
-<option>Algebra</option>
+<select id="medium">
+<option>Hindi</option>
+<option>English</option>
 </select>
 
 <button onclick="loadContent()">Load Content</button>
 </div>
 
 <div class="card">
-<h3>Notes</h3>
-<p id="notes">Click Load Content</p>
+<h3>📚 Notes</h3>
+<p id="notes"></p>
 <p id="mnemonic"></p>
-
-<button onclick="video()">Watch Video</button>
+<button onclick="download()">📥 Download</button>
+<button onclick="video()">🎬 Watch Video</button>
 </div>
 
 <div class="card">
-<h3>Ojha Sir Whiteboard</h3>
-<textarea id="q"></textarea>
-<button onclick="teach()">Ask</button>
-<p id="ans"></p>
-</div>
-
-<div class="card">
-<h3>Answer Evaluation</h3>
-
-<select id="marks">
-<option>1</option>
-<option>2</option>
-<option>3</option>
-<option>5</option>
-<option>10</option>
+<h3>🤖 AI Teacher</h3>
+<select id="voiceLang">
+<option>Hindi</option>
+<option>English</option>
+<option>Hinglish</option>
 </select>
 
-<textarea id="answer"></textarea>
-<button onclick="check()">Check</button>
-
-<p id="result"></p>
+<textarea id="q"></textarea>
+<button onclick="ai()">Ask AI</button>
+<p id="ans"></p>
+<button onclick="speak()">🔊 Speak</button>
 </div>
 
 <div class="card">
-<h3>🎮 Play to Learn</h3>
+<h3>🎯 Quiz</h3>
 <button onclick="quiz()">Start Quiz</button>
-<p id="quiz"></p>
+<p id="quizQ"></p>
+<div id="quizOpt"></div>
+<p id="result"></p>
+<p id="progress"></p>
 </div>
 
 <script>
 
-function loadContent(){
-let ch = document.getElementById("chapter").value;
+// DARK MODE
+function toggleMode(){
+document.body.classList.toggle("dark");
+}
 
-if(ch=="Photosynthesis"){
-notes.innerText="Plants make food using sunlight";
-mnemonic.innerText="SUN = Sunlight + CO2 + Water";
+// LOGIN
+function login(){
+welcome.innerText="Welcome "+(name.value||"Student");
 }
-else if(ch=="Motion"){
-notes.innerText="Motion = change in position";
-mnemonic.innerText="DST = Distance Speed Time";
+
+// SUBJECTS FULL
+function loadSubjects(){
+let c=class.value;
+let arr=[];
+
+if(c<=8){
+arr=["Hindi","English","Science","Math","Social Science"];
 }
-else if(ch=="Force"){
-notes.innerText="Force = push or pull";
-mnemonic.innerText="F = ma";
+else if(c<=10){
+arr=["Hindi","English","Science","Math","Social Science","IT","Tourism"];
 }
 else{
-notes.innerText="Basic concept";
-mnemonic.innerText="Learn smart";
-}
+arr=["Hindi","English","Physics","Chemistry","Biology","Math","History","Polity","Geography","Economics","Commerce","Accountancy","Business","IT","Tourism"];
 }
 
+subject.innerHTML="";
+arr.forEach(s=>{
+let o=document.createElement("option");
+o.text=s;
+subject.add(o);
+});
+
+loadChapters();
+}
+
+// CHAPTERS
+function loadChapters(){
+chapter.innerHTML="";
+["Basics","Motion","Force","Energy","Algebra"].forEach(c=>{
+let o=document.createElement("option");
+o.text=c;
+chapter.add(o);
+});
+}
+
+// CONTENT
+function loadContent(){
+notes.innerText="Concept: "+chapter.value+" explained in simple way.";
+mnemonic.innerText="Mnemonic: Easy trick to remember "+chapter.value;
+}
+
+// DOWNLOAD
+function download(){
+let blob=new Blob([notes.innerText]);
+let a=document.createElement("a");
+a.href=URL.createObjectURL(blob);
+a.download="notes.txt";
+a.click();
+}
+
+// VIDEO
 function video(){
-let ch=document.getElementById("chapter").value;
-
-if(ch=="Photosynthesis")
-window.open("https://youtu.be/UPBMG5EYydo");
-
-if(ch=="Motion")
-window.open("https://youtu.be/nA9xNaHYZk4");
-
-if(ch=="Force")
-window.open("https://youtu.be/3HjZ0r9dW2I");
+window.open("https://youtube.com/results?search_query="+chapter.value);
 }
 
-function teach(){
-let q=document.getElementById("q").value;
-document.getElementById("ans").innerText=
-"Ojha Sir: "+q+" ko simple tarike se samjho";
+// AI
+function ai(){
+let t=q.value.toLowerCase();
+if(t.includes("force")){
+ans.innerText="Force is push or pull.";
+}
+else{
+ans.innerText="Simple explanation for "+chapter.value;
+}
 }
 
-function check(){
-let m=document.getElementById("marks").value;
-let score=Math.floor(m*0.8);
+// VOICE
+function speak(){
+let speech=new SpeechSynthesisUtterance(ans.innerText);
+let lang=voiceLang.value;
 
-document.getElementById("result").innerText=
-"Score: "+score+"/"+m+" Improve answer writing";
+if(lang=="Hindi") speech.lang="hi-IN";
+else if(lang=="Hinglish") speech.lang="en-IN";
+else speech.lang="en-US";
+
+speechSynthesis.speak(speech);
 }
+
+// QUIZ + ANALYTICS
+let total=0,correct=0;
 
 function quiz(){
-document.getElementById("quiz").innerText=
-"Q: What is force?";
+quizQ.innerText="Force is?";
+quizOpt.innerHTML="";
+
+["Push","Pull","Both"].forEach(opt=>{
+let b=document.createElement("button");
+b.innerText=opt;
+
+b.onclick=function(){
+total++;
+if(opt=="Both"){correct++;result.innerText="Correct";}
+else result.innerText="Wrong";
+
+let percent=Math.floor((correct/total)*100);
+progress.innerText="Accuracy: "+percent+"%";
+};
+
+quizOpt.appendChild(b);
+});
 }
 
+// INIT
+loadSubjects();
+
+</script>
+
+<script>
+if("serviceWorker" in navigator){
+navigator.serviceWorker.register("sw.js");
+}
 </script>
 
 </body>
