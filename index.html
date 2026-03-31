@@ -1,201 +1,127 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GyaanGuru App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GyaanGuru</title>
 
 <style>
-body{font-family:sans-serif;margin:0;background:#eef2f5}
-header{background:#0d47a1;color:white;padding:12px;text-align:center}
-.card{background:white;margin:10px;padding:10px;border-radius:10px}
-button,select,textarea{width:100%;padding:10px;margin-top:5px}
-.dark{background:#121212;color:white}
-</style>
+body{
+margin:0;
+font-family:sans-serif;
+background:#0f172a;
+color:white;
+}
 
+.header{
+background:#1e293b;
+text-align:center;
+padding:15px;
+font-size:18px;
+}
+
+.container{
+padding:10px;
+}
+
+select,button,input{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:10px;
+border:none;
+font-size:16px;
+}
+
+button{
+background:#22c55e;
+color:white;
+font-weight:bold;
+}
+
+.card{
+background:#1e293b;
+padding:12px;
+border-radius:12px;
+margin-top:10px;
+}
+
+</style>
 </head>
 
 <body>
 
-<header>
-🎓 GyaanGuru-App  
-<br>By S. C. Ojha  
-<br><i>"Think Beyond Books"</i>
-</header>
+<div class="header">
+📚 GyaanGuru<br>
+"Think Beyond Books"
+</div>
 
-<div class="card">
-<select id="class" onchange="loadSubjects()">
-<option>Class 6</option><option>Class 7</option><option>Class 8</option>
-<option>Class 9</option><option>Class 10</option>
-<option>Class 11</option><option>Class 12</option>
-</select>
-
-<select id="subject"></select>
+<div class="container">
 
 <select id="chapter">
 <option>Photosynthesis</option>
-<option>Motion</option>
 <option>Force</option>
-<option>Algebra</option>
+<option>Motion</option>
 </select>
 
 <button onclick="loadContent()">Load Content</button>
-</div>
 
 <div class="card" id="notes">Notes will appear here</div>
+<div class="card" id="mnemonic"></div>
+<div class="card" id="video"></div>
 
-<div class="card">
-<button onclick="watchVideo()">🎬 Watch Video</button>
-</div>
+<input id="question" placeholder="Ask your doubt">
 
-<div class="card">
-<select id="voiceLang">
-<option>Hindi</option>
-<option>English</option>
-<option>Hinglish</option>
-</select>
+<button onclick="ask()">Ask</button>
 
-<textarea id="q" placeholder="Ask question"></textarea>
-<button onclick="askAI()">Ask AI</button>
-<p id="ans"></p>
-<button onclick="speak()">🔊 Speak</button>
-</div>
+<div class="card" id="answer"></div>
 
-<div class="card">
 <button onclick="quiz()">Start Quiz</button>
-<p id="quizQ"></p>
-<div id="opts"></div>
-<p id="score"></p>
-</div>
 
-<div class="card">
-<button onclick="toggleDark()">🌙 Dark Mode</button>
 </div>
 
 <script>
 
-// SUBJECT SYSTEM
-function loadSubjects(){
-let c=class.value;
-let s=subject;
-s.innerHTML="";
-
-let data={
-"Class 6":["Hindi","English","Science","Math","SST"],
-"Class 9":["Hindi","English","Science","Math","SST","IT"]
+const data={
+Photosynthesis:{
+notes:"Plants make food using sunlight, CO2 and water.",
+mnemonic:"SUN = Sunlight Use Nutrients",
+video:"https://www.youtube.com/embed/xuYz3lRsm2I"
+},
+Force:{
+notes:"Force is push or pull.",
+mnemonic:"Push + Pull = Force",
+video:"https://www.youtube.com/embed/1Vg9Zg4nYz8"
+},
+Motion:{
+notes:"Motion is change in position.",
+mnemonic:"Move Over Time",
+video:"https://www.youtube.com/embed/nX3w9XJ2V5E"
+}
 };
 
-let list=data[c]||["Science","Math"];
-list.forEach(x=>{
-let o=document.createElement("option");
-o.text=x;
-s.add(o);
-});
-}
-loadSubjects();
-
-// CONTENT
 function loadContent(){
-notes.innerHTML="🌿 Plants make food using sunlight.<br>Mnemonic: SUN";
+let c=document.getElementById("chapter").value;
+
+document.getElementById("notes").innerText=data[c].notes;
+document.getElementById("mnemonic").innerText="Mnemonic: "+data[c].mnemonic;
+
+document.getElementById("video").innerHTML=
+<iframe width="100%" height="200" src="${data[c].video}" frameborder="0" allowfullscreen></iframe>;
 }
 
-// VIDEO
-function watchVideo(){
-window.open("https://youtube.com/results?search_query="+chapter.value);
+function ask(){
+let q=document.getElementById("question").value;
+document.getElementById("answer").innerText=
+"Ojha Sir: " + q + " → समझो, याद मत करो 👍";
 }
 
-// AI
-function askAI(){
-ans.innerText="Simple explanation: "+q.value;
-}
-
-// VOICE
-function speak(){
-let t=ans.innerText;
-let lang=voiceLang.value;
-let s=new SpeechSynthesisUtterance(t);
-
-if(lang=="Hindi") s.lang="hi-IN";
-else if(lang=="Hinglish") s.lang="en-IN";
-else s.lang="en-US";
-
-speechSynthesis.speak(s);
-}
-
-// QUIZ
 function quiz(){
-quizQ.innerText="Force is?";
-opts.innerHTML="";
-
-["Push","Pull","Both"].forEach(opt=>{
-let b=document.createElement("button");
-b.innerText=opt;
-b.onclick=()=>score.innerText=(opt=="Both"?"Correct":"Wrong");
-opts.appendChild(b);
-});
+let ans=prompt("What is Force?");
+if(ans && ans.toLowerCase().includes("push")){
+alert("Correct 🎉");
+}else{
+alert("Try again");
 }
-
-// DARK MODE
-function toggleDark(){
-document.body.classList.toggle("dark");
-}
-
-// 🔥 AUTO ICON + PWA (NO FILE NEEDED)
-(function(){
-
-// Create icon dynamically
-let canvas=document.createElement("canvas");
-canvas.width=192;canvas.height=192;
-let ctx=canvas.getContext("2d");
-
-ctx.fillStyle="#0d47a1";
-ctx.fillRect(0,0,192,192);
-
-ctx.fillStyle="white";
-ctx.font="bold 20px Arial";
-ctx.fillText("GyaanGuru",10,80);
-ctx.font="14px Arial";
-ctx.fillText("Ojha Sir",30,110);
-
-let iconURL=canvas.toDataURL();
-
-// Inject favicon
-let link=document.createElement("link");
-link.rel="icon";
-link.href=iconURL;
-document.head.appendChild(link);
-
-// Manifest via blob
-let manifest={
-name:"GyaanGuru App",
-short_name:"GyaanGuru",
-start_url:".",
-display:"standalone",
-background_color:"#0d47a1",
-theme_color:"#0d47a1",
-icons:[{
-src:iconURL,
-sizes:"192x192",
-type:"image/png"
-}]
-};
-
-let blob=new Blob([JSON.stringify(manifest)],{type:"application/json"});
-let manifestURL=URL.createObjectURL(blob);
-
-let mlink=document.createElement("link");
-mlink.rel="manifest";
-mlink.href=manifestURL;
-document.head.appendChild(mlink);
-
-})();
-
-// SERVICE WORKER
-if("serviceWorker" in navigator){
-navigator.serviceWorker.register(URL.createObjectURL(new Blob([`
-self.addEventListener('fetch',e=>{
-e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)))
-});
-`],{type:"text/javascript"})));
 }
 
 </script>
