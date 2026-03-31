@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GyaanGuru</title>
+<title>GyaanGuru Premium</title>
 
 <style>
 body{
@@ -14,22 +14,37 @@ color:white;
 
 .header{
 background:#1e293b;
-text-align:center;
 padding:15px;
+text-align:center;
 font-size:18px;
+font-weight:bold;
 }
 
 .container{
-padding:10px;
+padding:12px;
+}
+
+.card{
+background:#1e293b;
+padding:15px;
+border-radius:14px;
+margin-top:12px;
+box-shadow:0 0 10px rgba(0,0,0,0.3);
+}
+
+.title{
+color:#22c55e;
+font-weight:bold;
+margin-bottom:8px;
 }
 
 select,button,input{
 width:100%;
 padding:12px;
-margin:8px 0;
+margin-top:8px;
 border-radius:10px;
 border:none;
-font-size:16px;
+font-size:15px;
 }
 
 button{
@@ -38,11 +53,8 @@ color:white;
 font-weight:bold;
 }
 
-.card{
-background:#1e293b;
-padding:12px;
-border-radius:12px;
-margin-top:10px;
+iframe{
+border-radius:10px;
 }
 
 </style>
@@ -51,12 +63,16 @@ margin-top:10px;
 <body>
 
 <div class="header">
-📚 GyaanGuru<br>
+🎓 GyaanGuru App<br>
+By S. C. Ojha<br>
 "Think Beyond Books"
 </div>
 
 <div class="container">
 
+<!-- SELECT -->
+<div class="card">
+<div class="title">📘 Select Topic</div>
 <select id="chapter">
 <option>Photosynthesis</option>
 <option>Force</option>
@@ -64,18 +80,50 @@ margin-top:10px;
 </select>
 
 <button onclick="loadContent()">Load Content</button>
+</div>
 
-<div class="card" id="notes">Notes will appear here</div>
-<div class="card" id="mnemonic"></div>
-<div class="card" id="video"></div>
+<!-- NOTES -->
+<div class="card">
+<div class="title">📝 Notes</div>
+<div id="notes">Click Load Content</div>
+</div>
 
+<!-- MNEMONIC -->
+<div class="card">
+<div class="title">🧠 Mnemonic</div>
+<div id="mnemonic"></div>
+</div>
+
+<!-- VIDEO -->
+<div class="card">
+<div class="title">🎬 Video</div>
+<div id="video"></div>
+</div>
+
+<!-- AI -->
+<div class="card">
+<div class="title">🤖 Ask Ojha Sir</div>
 <input id="question" placeholder="Ask your doubt">
-
 <button onclick="ask()">Ask</button>
+<div id="answer"></div>
+</div>
 
-<div class="card" id="answer"></div>
+<!-- VOICE -->
+<div class="card">
+<div class="title">🔊 Voice Teacher</div>
+<select id="voiceLang">
+<option value="hi-IN">Hindi</option>
+<option value="en-US">English</option>
+<option value="en-IN">Hinglish</option>
+</select>
+<button onclick="speak()">Play Voice</button>
+</div>
 
+<!-- QUIZ -->
+<div class="card">
+<div class="title">🎮 Quiz</div>
 <button onclick="quiz()">Start Quiz</button>
+</div>
 
 </div>
 
@@ -83,18 +131,18 @@ margin-top:10px;
 
 const data={
 Photosynthesis:{
-notes:"Plants make food using sunlight, CO2 and water.",
-mnemonic:"SUN = Sunlight Use Nutrients",
+notes:"Plants prepare food using sunlight, CO2 and water.",
+mnemonic:"SUN = Sunlight + Use CO2 + Nutrients",
 video:"https://www.youtube.com/embed/xuYz3lRsm2I"
 },
 Force:{
-notes:"Force is push or pull.",
+notes:"Force is push or pull acting on an object.",
 mnemonic:"Push + Pull = Force",
 video:"https://www.youtube.com/embed/1Vg9Zg4nYz8"
 },
 Motion:{
-notes:"Motion is change in position.",
-mnemonic:"Move Over Time",
+notes:"Motion means change in position over time.",
+mnemonic:"MOTION = Move Over Time",
 video:"https://www.youtube.com/embed/nX3w9XJ2V5E"
 }
 };
@@ -103,16 +151,23 @@ function loadContent(){
 let c=document.getElementById("chapter").value;
 
 document.getElementById("notes").innerText=data[c].notes;
-document.getElementById("mnemonic").innerText="Mnemonic: "+data[c].mnemonic;
+document.getElementById("mnemonic").innerText=data[c].mnemonic;
 
 document.getElementById("video").innerHTML=
-<iframe width="100%" height="200" src="${data[c].video}" frameborder="0" allowfullscreen></iframe>;
+<iframe width="100%" height="200" src="${data[c].video}" allowfullscreen></iframe>;
 }
 
 function ask(){
 let q=document.getElementById("question").value;
 document.getElementById("answer").innerText=
-"Ojha Sir: " + q + " → समझो, याद मत करो 👍";
+"Ojha Sir: "+q+" → Concept समझो, यही topper बनने का तरीका है 🔥";
+}
+
+function speak(){
+let text=document.getElementById("notes").innerText;
+let speech=new SpeechSynthesisUtterance(text);
+speech.lang=document.getElementById("voiceLang").value;
+speechSynthesis.speak(speech);
 }
 
 function quiz(){
