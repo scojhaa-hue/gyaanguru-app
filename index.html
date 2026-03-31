@@ -1,115 +1,122 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GyaanGuru AI App</title>
+  <title>GyaanGuru v3</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    body {
-      font-family: Arial;
-      background: #eef2f7;
-      margin: 0;
-    }
+    body { font-family: Arial; margin:0; background:#eef2f7; }
+    header { background:#1e88e5; color:white; padding:15px; text-align:center; }
 
-    header {
-      background: #2e7d32;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 20px;
-    }
-
-    .container {
-      padding: 12px;
-    }
+    .container { padding:10px; }
 
     .card {
-      background: white;
-      padding: 15px;
-      margin-bottom: 12px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background:white;
+      padding:15px;
+      margin-bottom:10px;
+      border-radius:10px;
     }
 
     button {
-      padding: 10px;
-      width: 100%;
-      border: none;
-      border-radius: 8px;
-      background: #2e7d32;
-      color: white;
-      font-size: 14px;
-      margin-top: 10px;
+      width:100%;
+      padding:10px;
+      margin-top:8px;
+      background:#1e88e5;
+      color:white;
+      border:none;
+      border-radius:6px;
     }
 
-    textarea {
-      width: 100%;
-      height: 120px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-    }
-
-    .result {
-      margin-top: 10px;
-      padding: 10px;
-      background: #f1f1f1;
-      border-radius: 8px;
+    select, textarea {
+      width:100%;
+      padding:10px;
+      margin-top:8px;
     }
   </style>
 </head>
 
 <body>
 
-<header>📚 GyaanGuru AI Teacher</header>
+<header>📚 GyaanGuru - Smart Learning App</header>
 
 <div class="container">
 
   <div class="card">
-    <h3>🧑‍🏫 Ojha Sir Teaching</h3>
-    <button onclick="startClass()">Start Class</button>
+    <h3>🎓 Select Class</h3>
+    <select id="class">
+      <option>Class 6</option>
+      <option>Class 7</option>
+      <option>Class 8</option>
+      <option>Class 9</option>
+      <option>Class 10</option>
+      <option>Class 11</option>
+      <option>Class 12</option>
+    </select>
+
+    <h3>🌐 Medium</h3>
+    <select id="medium">
+      <option>Hindi</option>
+      <option>English</option>
+      <option>Hinglish</option>
+    </select>
+
+    <button onclick="loadContent()">Load Content</button>
   </div>
 
   <div class="card">
-    <h3>🎬 Animation</h3>
-    <button onclick="watchVideo()">Watch Animation</button>
+    <h3>📖 Chapter: Photosynthesis</h3>
+    <p id="notes">Click Load Content</p>
+    <button onclick="watchVideo()">🎬 Watch Animation</button>
   </div>
 
   <div class="card">
-    <h3>📝 Answer Checker</h3>
-    <textarea id="answer" placeholder="Write your answer here..."></textarea>
-    <button onclick="checkAnswer()">Check Answer</button>
-    <div id="result" class="result"></div>
+    <h3>🧑‍🏫 Whiteboard (Ojha Sir)</h3>
+    <textarea id="question" placeholder="Write your question..."></textarea>
+    <button onclick="teach()">Ask Ojha Sir</button>
+    <p id="answer"></p>
+  </div>
+
+  <div class="card">
+    <h3>🎮 Play to Learn</h3>
+    <button onclick="playGame()">Start Quiz Game</button>
+    <p id="game"></p>
   </div>
 
 </div>
 
 <script>
 
-function startClass(){
-  alert("Ojha Sir is teaching: Photosynthesis is the process by which plants make food using sunlight.");
+function loadContent(){
+  let medium = document.getElementById("medium").value;
+
+  if(medium == "Hindi"){
+    document.getElementById("notes").innerHTML =
+    "प्रकाश संश्लेषण वह प्रक्रिया है जिसमें पौधे सूर्य के प्रकाश से भोजन बनाते हैं।";
+  }
+  else if(medium == "English"){
+    document.getElementById("notes").innerHTML =
+    "Photosynthesis is the process by which plants make food using sunlight.";
+  }
+  else{
+    document.getElementById("notes").innerHTML =
+    "Photosynthesis ek process hai jisme plants sunlight se food banate hain.";
+  }
 }
 
 function watchVideo(){
-  window.location.href = "https://www.youtube.com/watch?v=CM9aVYfZ7tQ";
+  window.location.href = "https://www.youtube.com/watch?v=UPBMG5EYydo";
 }
 
-function checkAnswer(){
-  let ans = document.getElementById("answer").value.toLowerCase();
+function teach(){
+  let q = document.getElementById("question").value;
 
-  if(ans.length < 20){
-    document.getElementById("result").innerHTML =
-    "Score: 3/10 ❌ Answer too short. Write more explanation.";
-  }
-  else if(ans.includes("photosynthesis")){
-    document.getElementById("result").innerHTML =
-    "Score: 8/10 ✅ Good answer. Add diagram and keywords for full marks.";
-  }
-  else{
-    document.getElementById("result").innerHTML =
-    "Score: 5/10 ⚠️ Improve keywords and clarity.";
-  }
+  document.getElementById("answer").innerHTML =
+  "Ojha Sir: " + q + " ka answer hai - Photosynthesis ek important topic hai.";
+}
+
+function playGame(){
+  document.getElementById("game").innerHTML =
+  "Quiz: Plants food kaise banate hain? Answer: Photosynthesis 🎉";
 }
 
 </script>
