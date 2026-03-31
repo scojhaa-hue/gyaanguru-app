@@ -1,114 +1,184 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GyaanGuru v6</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GyaanGuru Ultimate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body { font-family: Arial; margin:0; background:#eef2f7; }
-    header { background:#d32f2f; color:white; padding:15px; text-align:center; }
+<style>
+body { font-family: Arial; margin:0; background:#eef2f7; }
+header { background:#2e7d32; color:white; padding:15px; text-align:center; }
 
-    .container { padding:10px; }
+.container { padding:10px; }
 
-    .card {
-      background:white;
-      padding:15px;
-      margin-bottom:10px;
-      border-radius:10px;
-    }
+.card {
+  background:white;
+  padding:15px;
+  margin-bottom:10px;
+  border-radius:10px;
+}
 
-    button {
-      width:100%;
-      padding:10px;
-      margin-top:8px;
-      background:#d32f2f;
-      color:white;
-      border:none;
-      border-radius:6px;
-    }
+button {
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  background:#2e7d32;
+  color:white;
+  border:none;
+  border-radius:6px;
+}
 
-    textarea, select {
-      width:100%;
-      padding:10px;
-      margin-top:8px;
-    }
+select, textarea {
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+}
 
-    .result {
-      margin-top:10px;
-      background:#f1f1f1;
-      padding:10px;
-      border-radius:8px;
-    }
-  </style>
+.result {
+  margin-top:10px;
+  background:#f1f1f1;
+  padding:10px;
+  border-radius:8px;
+}
+</style>
 </head>
 
 <body>
 
-<header>📚 GyaanGuru - Smart Marking System</header>
+<header>📚 GyaanGuru Ultimate App</header>
 
 <div class="container">
 
-  <div class="card">
+<!-- CLASS + MEDIUM -->
+<div class="card">
+<h3>🎓 Class</h3>
+<select id="class">
+<option>Class 6</option>
+<option>Class 7</option>
+<option>Class 8</option>
+<option>Class 9</option>
+<option>Class 10</option>
+</select>
 
-    <h3>📝 Question</h3>
-    <textarea id="question" placeholder="Enter question..."></textarea>
+<h3>🌐 Medium</h3>
+<select id="medium">
+<option>Hindi</option>
+<option>English</option>
+<option>Hinglish</option>
+</select>
 
-    <h3>🎯 Marks</h3>
-    <select id="marks">
-      <option value="1">1 Mark</option>
-      <option value="2">2 Marks</option>
-      <option value="3">3 Marks</option>
-      <option value="5">5 Marks</option>
-      <option value="10">10 Marks</option>
-    </select>
+<button onclick="loadContent()">Load Content</button>
+</div>
 
-    <h3>✍️ Answer</h3>
-    <textarea id="answer" placeholder="Write answer..."></textarea>
+<!-- NOTES -->
+<div class="card">
+<h3>📖 Chapter: Photosynthesis / Motion</h3>
+<p id="notes">Click Load Content</p>
+<button onclick="watchVideo()">🎬 Watch Video</button>
+</div>
 
-    <button onclick="evaluate()">Check Answer</button>
+<!-- WHITEBOARD -->
+<div class="card">
+<h3>🧑‍🏫 Ojha Sir Whiteboard</h3>
+<textarea id="wbq" placeholder="Ask question..."></textarea>
+<button onclick="teach()">Ask Ojha Sir</button>
+<p id="wbans"></p>
+</div>
 
-    <div id="result" class="result"></div>
+<!-- ANSWER CHECK -->
+<div class="card">
+<h3>📝 Answer Evaluation</h3>
 
-  </div>
+<textarea id="question" placeholder="Enter question..."></textarea>
+
+<select id="marks">
+<option value="1">1 Mark</option>
+<option value="2">2 Marks</option>
+<option value="3">3 Marks</option>
+<option value="5">5 Marks</option>
+<option value="10">10 Marks</option>
+</select>
+
+<textarea id="answer" placeholder="Write answer..."></textarea>
+
+<button onclick="evaluate()">Check Answer</button>
+
+<div id="result" class="result"></div>
+</div>
+
+<!-- GAME -->
+<div class="card">
+<h3>🎮 Play to Learn</h3>
+<button onclick="playGame()">Start Quiz</button>
+<p id="game"></p>
+</div>
 
 </div>
 
 <script>
 
-function evaluate(){
+let currentChapter = "Photosynthesis";
 
+function loadContent(){
+  let medium = document.getElementById("medium").value;
+
+  if(medium == "Hindi"){
+    document.getElementById("notes").innerHTML =
+    "प्रकाश संश्लेषण वह प्रक्रिया है जिसमें पौधे भोजन बनाते हैं।";
+  } else if(medium == "English"){
+    document.getElementById("notes").innerHTML =
+    "Photosynthesis is the process by which plants make food.";
+  } else {
+    document.getElementById("notes").innerHTML =
+    "Photosynthesis ek process hai jisme plants food banate hain.";
+  }
+}
+
+function watchVideo(){
+  window.open("https://www.youtube.com/watch?v=UPBMG5EYydo");
+}
+
+function teach(){
+  let q = document.getElementById("wbq").value.toLowerCase();
+
+  if(q.includes("acceleration")){
+    document.getElementById("wbans").innerHTML =
+    "Ojha Sir: Acceleration velocity ka change hota hai.";
+  } else {
+    document.getElementById("wbans").innerHTML =
+    "Ojha Sir: Achha question hai, aur detail likho.";
+  }
+}
+
+function evaluate(){
   let ans = document.getElementById("answer").value.toLowerCase();
   let maxMarks = parseInt(document.getElementById("marks").value);
 
   let score = 0;
   let feedback = "";
-  let mnemonic = "";
+  let mnemonic = "DEF = Definition + Example + Formula";
 
-  // Evaluation logic
   if(ans.length < 20){
     score = Math.floor(maxMarks * 0.3);
-    feedback = "Answer short hai. Detail likho.";
+    feedback = "Short answer.";
   }
   else if(ans.includes("definition")){
     score = Math.floor(maxMarks * 0.6);
-    feedback = "Definition sahi hai. Example add karo.";
-  }
-  else if(ans.includes("process") || ans.includes("formula")){
-    score = Math.floor(maxMarks * 0.8);
-    feedback = "Achha answer hai. Diagram/keywords add karo.";
+    feedback = "Definition good, add example.";
   }
   else{
-    score = Math.floor(maxMarks * 0.5);
-    feedback = "Answer average hai. Structure improve karo.";
+    score = Math.floor(maxMarks * 0.8);
+    feedback = "Good answer, add diagram.";
   }
-
-  mnemonic = "👉 Trick: 'DEF' = Definition + Example + Formula";
 
   document.getElementById("result").innerHTML =
   "Score: " + score + "/" + maxMarks + "<br><br>" +
-  "📊 Feedback: " + feedback + "<br><br>" +
-  "🧠 Mnemonic: " + mnemonic;
+  "Feedback: " + feedback + "<br><br>" +
+  "Mnemonic: " + mnemonic;
+}
 
+function playGame(){
+  document.getElementById("game").innerHTML =
+  "Quiz: Plants food kaise banate hain? → Photosynthesis 🎉";
 }
 
 </script>
