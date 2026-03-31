@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>GyaanGuru Ultimate</title>
+<title>GyaanGuru App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body { font-family: Arial; margin:0; background:#eef2f7; }
-header { background:#2e7d32; color:white; padding:15px; text-align:center; }
+
+header {
+  background:#1b5e20;
+  color:white;
+  padding:10px;
+  text-align:center;
+}
+
+header img {
+  width:40px;
+  vertical-align:middle;
+}
 
 .container { padding:10px; }
 
@@ -21,7 +32,7 @@ button {
   width:100%;
   padding:10px;
   margin-top:8px;
-  background:#2e7d32;
+  background:#1b5e20;
   color:white;
   border:none;
   border-radius:6px;
@@ -44,11 +55,14 @@ select, textarea {
 
 <body>
 
-<header>📚 GyaanGuru Ultimate App</header>
+<header>
+<img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png">
+<b> GyaanGuru App - By Ojha Sir</b>
+</header>
 
 <div class="container">
 
-<!-- CLASS + MEDIUM -->
+<!-- CLASS -->
 <div class="card">
 <h3>🎓 Class</h3>
 <select id="class">
@@ -57,21 +71,25 @@ select, textarea {
 <option>Class 8</option>
 <option>Class 9</option>
 <option>Class 10</option>
+<option>Class 11</option>
+<option>Class 12</option>
 </select>
 
-<h3>🌐 Medium</h3>
-<select id="medium">
-<option>Hindi</option>
-<option>English</option>
-<option>Hinglish</option>
+<h3>📘 Subject</h3>
+<select id="subject" onchange="loadChapters()">
+<option>Science</option>
+<option>Math</option>
 </select>
+
+<h3>📖 Chapter</h3>
+<select id="chapter"></select>
 
 <button onclick="loadContent()">Load Content</button>
 </div>
 
 <!-- NOTES -->
 <div class="card">
-<h3>📖 Chapter: Photosynthesis / Motion</h3>
+<h3>📖 Notes</h3>
 <p id="notes">Click Load Content</p>
 <button onclick="watchVideo()">🎬 Watch Video</button>
 </div>
@@ -105,81 +123,76 @@ select, textarea {
 <div id="result" class="result"></div>
 </div>
 
-<!-- GAME -->
-<div class="card">
-<h3>🎮 Play to Learn</h3>
-<button onclick="playGame()">Start Quiz</button>
-<p id="game"></p>
-</div>
-
 </div>
 
 <script>
 
-let currentChapter = "Photosynthesis";
+let videos = {
+  "Photosynthesis": "https://www.youtube.com/watch?v=UPBMG5EYydo",
+  "Motion": "https://www.youtube.com/watch?v=nA9xNaHYZk4",
+  "Force": "https://www.youtube.com/watch?v=3HjZ0r9dW2I"
+};
+
+function loadChapters(){
+  let subject = document.getElementById("subject").value;
+  let chapter = document.getElementById("chapter");
+
+  chapter.innerHTML = "";
+
+  if(subject == "Science"){
+    chapter.innerHTML += "<option>Photosynthesis</option>";
+    chapter.innerHTML += "<option>Motion</option>";
+    chapter.innerHTML += "<option>Force</option>";
+  } else {
+    chapter.innerHTML += "<option>Algebra</option>";
+    chapter.innerHTML += "<option>Geometry</option>";
+  }
+}
 
 function loadContent(){
-  let medium = document.getElementById("medium").value;
+  let ch = document.getElementById("chapter").value;
 
-  if(medium == "Hindi"){
+  if(ch == "Photosynthesis"){
     document.getElementById("notes").innerHTML =
-    "प्रकाश संश्लेषण वह प्रक्रिया है जिसमें पौधे भोजन बनाते हैं।";
-  } else if(medium == "English"){
+    "Plants sunlight se food banate hain (Photosynthesis).";
+  }
+  else if(ch == "Motion"){
     document.getElementById("notes").innerHTML =
-    "Photosynthesis is the process by which plants make food.";
-  } else {
+    "Motion ka matlab position change hona hai.";
+  }
+  else{
     document.getElementById("notes").innerHTML =
-    "Photosynthesis ek process hai jisme plants food banate hain.";
+    "Basic concept samjho aur practice karo.";
   }
 }
 
 function watchVideo(){
-  window.open("https://www.youtube.com/watch?v=UPBMG5EYydo");
+  let ch = document.getElementById("chapter").value;
+  window.open(videos[ch]);
 }
 
 function teach(){
-  let q = document.getElementById("wbq").value.toLowerCase();
+  let q = document.getElementById("wbq").value;
 
-  if(q.includes("acceleration")){
-    document.getElementById("wbans").innerHTML =
-    "Ojha Sir: Acceleration velocity ka change hota hai.";
-  } else {
-    document.getElementById("wbans").innerHTML =
-    "Ojha Sir: Achha question hai, aur detail likho.";
-  }
+  document.getElementById("wbans").innerHTML =
+  "Ojha Sir: " + q + " ka answer simple language me samjho...";
 }
 
 function evaluate(){
-  let ans = document.getElementById("answer").value.toLowerCase();
+  let ans = document.getElementById("answer").value;
   let maxMarks = parseInt(document.getElementById("marks").value);
 
-  let score = 0;
-  let feedback = "";
-  let mnemonic = "DEF = Definition + Example + Formula";
+  let score = Math.floor(maxMarks * 0.7);
 
-  if(ans.length < 20){
-    score = Math.floor(maxMarks * 0.3);
-    feedback = "Short answer.";
-  }
-  else if(ans.includes("definition")){
-    score = Math.floor(maxMarks * 0.6);
-    feedback = "Definition good, add example.";
-  }
-  else{
-    score = Math.floor(maxMarks * 0.8);
-    feedback = "Good answer, add diagram.";
-  }
+  let mnemonic = "👉 Trick: DEF = Definition + Example + Formula";
 
   document.getElementById("result").innerHTML =
   "Score: " + score + "/" + maxMarks + "<br><br>" +
-  "Feedback: " + feedback + "<br><br>" +
+  "Feedback: Improve structure.<br><br>" +
   "Mnemonic: " + mnemonic;
 }
 
-function playGame(){
-  document.getElementById("game").innerHTML =
-  "Quiz: Plants food kaise banate hain? → Photosynthesis 🎉";
-}
+loadChapters();
 
 </script>
 
